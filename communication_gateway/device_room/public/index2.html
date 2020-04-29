@@ -1,0 +1,106 @@
+
+<head>
+  <meta charset="UTF-8">
+  <title>SocketConnection||PHP</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  var socket = io.connect('http://localhost:4000');
+  socket.on('connect', function(){ 
+      var connection_details = {pin:"1234",device_id:"device1234",merchant_id:"RCTST0000008099",device_type:"merchant"};
+      var connect_request = JSON.stringify(connection_details);
+      console.log("type of request==="+connect_request);
+      socket.emit('CONNECT_REQUEST',connect_request);
+  });
+  
+  socket.on('updatechat', function (username, data) {
+      $('#conversation').append('<b>'+ username + ':</b> ' + data + '<br>');
+  });
+  
+  socket.on('LOGIN_RESPONSE', function (data) {
+      alert("user_opted-in");
+      console.log(data);
+  });
+  socket.on('DISCONNECT_RESPONSE', function (data) {
+      alert("DISCONNECT_RESPONSE"+data);
+      console.log(data);
+  });
+
+   socket.on('CONNECT_RESPONSE', function (data) {
+      console.log(data);
+  });
+
+  $(function(){
+    socket.emit('create', name);
+      $('#datasend').click( function() {
+          var message = $('#data').val();
+          $('#data').val('');
+          socket.emit('CHAT_MESSAGE', message);
+      });
+  
+      $('#data').keypress(function(e) {
+          if(e.which == 13) {
+              $(this).blur();
+              $('#datasend').focus().click();
+          }
+      });
+  
+      $('#roombutton').click(function(){
+          var name = $('#roomname').val();
+          $('#roomname').val('');
+          socket.emit('create', name)
+      });
+      $('#optin_button').click(function(){
+          var customer_details = {merchant_id:"RCTST0000008099",phone_no:"1100000036"};
+          var customer_info = JSON.stringify(customer_details);
+          socket.emit('LOGIN_REQUEST',customer_info);
+      });
+      $('#on_kill_request').click(function(){
+          var customer_details = {merchant_id:"RCTST0000008099"};
+          var customer_info = JSON.stringify(customer_details);
+          socket.emit('DISCONNECT_REQUEST',customer_info);
+      });
+  });
+  
+  </script>
+  </head>
+  <body>
+      <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
+          <b>ROOMS</b>
+          <div id="rooms"></div>
+      </div>
+  
+      <div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+          <div id="conversation"></div>
+          <input id="data" style="width:200px;" />
+          <input type="button" id="datasend" value="send" />
+      </div>
+      <input type="button" id="optin_button" value="request_optin" />
+      <input type="button" id="on_kill_request" value="on_kill_request" />
+     <!-- <div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+         <div id="room creation"></div>
+         <input id="roomname" style="width:200px;" />
+          <input type="button" id="roombutton" value="create room" />
+     </div> -->
+    
+  </body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

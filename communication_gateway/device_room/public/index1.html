@@ -1,0 +1,101 @@
+
+<head>
+  <meta charset="UTF-8">
+  <title>Socket.IO Chat Example</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  socket.on('CONNECT_REQUEST', function(devicedata) {
+      console.log("obj==============",typeof devicedata);
+        var obj = JSON.parse(devicedata);
+        console.log("obj2==============",typeof obj);
+        if(obj){
+          console.log("room_name=",obj);
+        var username = obj.device_id;
+        var req_devicetype = obj.merchant_id+"_"+obj.pin;
+        var room_name = obj.merchant_id+"_"+obj.pin;
+        socket.username = username;
+        socket.room = room_name;
+        socket.req_devicetype = req_devicetype;
+        usernames[username] = username;
+        
+        var number_room_member;
+        if(io.sockets.adapter.rooms[socket.room] == undefined)
+        {
+          number_room_member=0;
+        }else{
+          console.log(io.sockets.adapter.rooms[socket.room]);
+          number_room_member = io.sockets.adapter.rooms[socket.room].length;
+        }
+        console.log("number_room_member=",number_room_member);
+        console.log("devicetypes=====",devicetypes);
+        if(number_room_member<2 || obj.reconnect == true)
+        {
+          /*
+            Connecting merchant device and create room on basis of PIN.
+          */
+          console.log("room_name="+room_name);
+          var room_alredy_exist = _.contains(rooms,room_name);
+          if(!room_alredy_exist)
+          {
+            rooms.push(room_name);
+          }
+          socket.join(room_name);
+          devicetypes[req_devicetype] = obj;
+          socket.emit('updatechat', 'SERVER', 'you have connected to '+ room_name);
+          socket.broadcast.to(room_name).emit('updatechat', 'SERVER', username + ' has connected to this room');
+          socket.emit('updaterooms', rooms, room_name);
+          socket.broadcast.to(room_name).emit('you have connected to '+ room_name);
+          socket.broadcast.to(room_name).emit('SERVER', 'you have connected to '+ room_name);
+          //socket.broadcast.to(room_name).emit('CONNECT_RESPONSE','you have connected to '+ room_name);
+          io.to(socket.id).emit('CONNECT_RESPONSE','Success','you have connected to '+ room_name);
+        }else{
+          /*
+            Already two device connected in this room.
+          */
+          io.to(socket.id).emit('CONNECT_RESPONSE','Rejected','Alredy two device connected');
+        }
+        }
+    });
+  
+  </script>
+  </head>
+  <body>
+      <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
+          <b>ROOMS</b>
+          <div id="rooms"></div>
+      </div>
+  
+      <div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+          <div id="conversation"></div>
+          <input id="data" style="width:200px;" />
+          <input type="button" id="datasend" value="send" />
+      </div>
+  
+     <!-- <div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+         <div id="room creation"></div>
+         <input id="roomname" style="width:200px;" />
+          <input type="button" id="roombutton" value="create room" />
+     </div> -->
+    
+  </body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

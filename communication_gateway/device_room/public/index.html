@@ -1,0 +1,402 @@
+<head>
+  <meta charset="UTF-8">
+  <title>SocketConnection||PHP</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io.connect('http://localhost:4000');
+  socket.on('connect', function(){ 
+      var connection_details = {pin:"7529",device_id:"12s4ssd12345367",is_pin:true,device_type:"customer",reconnect:true};
+      var connect_request = JSON.stringify(connection_details);
+      console.log("type of request==="+connect_request);
+      socket.emit('CONNECT_REQUEST',connect_request);
+  });
+  
+  socket.on('updatechat', function (username, data) {
+      $('#conversation').append('<b>'+ username + ':</b> ' + data + '<br>');
+  });
+  
+  socket.on('LOGIN_RESPONSE', function (data,termconditionflag) {
+      alert("user_opted-in");
+      console.log("termconditionflag=",termconditionflag);
+      console.log(data);
+  });
+
+  socket.on('OPT_IN_RESPONSE', function (data) {
+      alert("OPT_IN_RESPONSE...");
+      console.log(data);
+  });
+
+   socket.on('OPT_OUT_RESPONSE', function (data) {
+      alert("OPT_OUT_RESPONSE...");
+      console.log(data);
+  });
+
+  socket.on('DISCONNECT_RESPONSE', function (data) {
+      alert("DISCONNECT_RESPONSE"+data);
+      console.log(data);
+  });
+
+   socket.on('CONNECT_RESPONSE', function (data) {
+      console.log(data);
+  });
+
+  socket.on('CANCEL_TOS_RESPONSE', function (data) {
+    alert("CANCEL_TOS_RESPONSE");
+  });
+
+  socket.on('CANCEL_RESPONSE', function (data) {
+    alert("CANCEL_RESPONSE");
+  });
+
+  socket.on('CANCEL_RESPONSE', function (data) {
+    alert("CANCEL_RESPONSE");
+  });
+
+   socket.on('ORDER_MODIFIED_RESPONSE', function (data) {
+    alert("CANCEL_RESPONSE");
+    console.log(data);
+  });
+
+socket.on('CUSTOMER_LOCAL_VERSION_RESPONSE', function (data) {
+    alert("CUSTOMER_LOCAL_VERSION_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('MERCHANT_LOCAL_VERSION_RESPONSE', function (data) {
+    alert("MERCHANT_LOCAL_VERSION_RESPONSE");
+    console.log(data);
+  });
+
+   socket.on('COUPONS_RESPONSE', function (data) {
+    alert("COUPONS_RESPONSE");
+    console.log(data);
+  });
+  socket.on('UPDATE_ORDER_RESPONSE', function (data) {
+    alert("UPDATE_ORDER_RESPONSE");
+    console.log(data);
+  });
+
+   socket.on('APPLIED_COUPON_RESPONSE', function (data) {
+    alert("APPLIED_COUPON_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('UNSELECT_COUPON_RESPONSE', function (data) {
+    alert("UNSELECT_COUPON_RESPONSE");
+    console.log(data);
+  });
+  
+  socket.on('SELECT_COUPON_RESPONSE', function (data) {
+    alert("SELECT_COUPON_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('RESET_CUSTOMER_APP_RESPONSE', function (data) {
+    alert("RESET_CUSTOMER_APP_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('PAYMENT_BEING_PROCESSED_RESPONSE', function (data) {
+    alert("PAYMENT_BEING_PROCESSED_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('DISPLAY_ERROR_MESSAGE_RESPONSE', function (data) {
+    alert("DISPLAY_ERROR_MESSAGE_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('SEND_MERCHANT_ID_RESPONSE', function (data) {
+    alert("SEND_MERCHANT_ID_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('DISCOUNT_COUPON_DETAILS_RESPONSE', function (data) {
+    alert("DISCOUNT_COUPON_DETAILS_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('SIGN_UP_OFFER_RESPONSE', function (data) {
+    alert("SIGN_UP_OFFER_RESPONSE");
+    console.log(data);
+  });
+
+   socket.on('TEXT_NOT_ACTIVATED_RESPONSE', function (data) {
+    alert("TEXT_NOT_ACTIVATED_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('UPDATE_MERCHANT_INFO_RESPONSE', function (data) {
+    alert("UPDATE_MERCHANT_INFO_RESPONSE");
+    console.log(data);
+  });
+
+  socket.on('REMOVE_ORDER_RESPONSE', function (data) {
+    alert("REMOVE_ORDER_RESPONSE");
+    console.log(data);
+  });
+
+   socket.on('REMOVE_COUPON_RESPONSE', function (data) {
+    alert("REMOVE_COUPON_RESPONSE");
+    console.log(data);
+  });
+
+
+  socket.on('GUID_RECEIVED_RESPONSE', function (data) {
+    alert("GUID_RECEIVED_RESPONSE");
+    console.log(data);
+  });
+
+   socket.on('UNPAIR_DEVICES_RESPONSE', function (data) {
+    alert("UNPAIR_DEVICES_RESPONSE");
+    console.log(data);
+  });
+
+   socket.on('PIN_EXPIRED_RESPONSE', function (data) {
+    alert("PIN_EXPIRED_RESPONSE");
+    console.log(data);
+  });
+
+  //   socket.on('OTHER_DEVICE_CONNECTION_CHANGED', function (data) {
+  //   alert("OTHER_DEVICE_CONNECTION_CHANGED"+data);
+  //   console.log(data);
+  // });
+
+    socket.on('OPT_IN_VIA_API_RESPONSE', function (data) {
+    alert("OPT_IN_VIA_API_RESPONSE");
+    // console.log(data);
+  });
+
+    socket.on('OPT_OUT_VIA_API_RESPONSE', function (data) {
+    alert("OPT_OUT_VIA_API_RESPONSE");
+    // console.log(data);
+  });
+
+
+
+  $(function(){
+    socket.emit('create', name);
+      $('#datasend').click( function() {
+          var message = $('#data').val();
+          $('#data').val('');
+          socket.emit('CHAT_MESSAGE', message);
+      });
+  
+      $('#data').keypress(function(e) {
+          if(e.which == 13) {
+              $(this).blur();
+              $('#datasend').focus().click();
+          }
+      });
+  
+      $('#roombutton').click(function(){
+          var name = $('#roomname').val();
+          $('#roomname').val('');
+          socket.emit('create', name)
+      });
+      $('#optin_button').click(function(){
+          var customer_details = {merchant_id:"RCTST0000008099",phone_no:"1100000036",device_type:"customer"};
+          var customer_info = JSON.stringify(customer_details);
+          socket.emit('LOGIN_REQUEST',customer_info);
+      });
+
+       $('#optin_button_userid').click(function(){
+          var customer_details = {customer_id:"1162",merchant_id:"RCTST0000008099",phone_no:"1100000036",device_type:"customer"};
+          var customer_info = JSON.stringify(customer_details);
+          socket.emit('OPT_IN_REQUEST',customer_info);
+      });
+
+      $('#opt_out_button').click(function(){
+          var customer_details = {customer_id:"1160",merchant_id:"RCTST0000008099",phone_no:"1100000036"};
+          var customer_info = JSON.stringify(customer_details);
+          socket.emit('OPT_OUT_REQUEST',customer_info);
+      });
+
+      $('#on_kill_request').click(function(){
+          var customer_details = {merchant_id:"RCTST0000008099"};
+          var customer_info = JSON.stringify(customer_details);
+          socket.emit('DISCONNECT_REQUEST',customer_info);
+      });
+
+      $('#cancele_button').click(function(){
+        var customer_details = {merchant_id:"RCTST0000008099"};
+        var customer_info    = JSON.stringify(customer_details);
+        socket.emit('CANCEL_TOS_REQUEST',customer_info);
+      });
+
+       $('#cancele_button_new').click(function(){
+        var customer_details = {merchant_id:"RCTST0000008099"};
+        var customer_info    = JSON.stringify(customer_details);
+        socket.emit('CANCEL_REQUEST',customer_info);
+      });
+
+
+       $('#order_modifi_req').click(function(){
+        var oreder_detail = {merchant_id:"RCTST0000008099"};
+        var oreder_detail    = JSON.stringify(oreder_detail);
+        socket.emit('ORDER_MODIFIED_REQUEST',oreder_detail);
+      });
+
+      
+      $('#version_req').click(function(){
+        var version_detail = {merchant_id:"RCTST0000008099"};
+        var version_detail    = JSON.stringify(version_detail);
+        socket.emit('MERCHANT_LOCAL_VERSION_REQUEST',version_detail);
+      });
+
+      $('#cus_version_req').click(function(){
+        var version_detail = {merchant_id:"RCTST0000008099"};
+        var version_detail    = JSON.stringify(version_detail);
+        socket.emit('CUSTOMER_LOCAL_VERSION_REQUEST',version_detail);
+      });
+      $('#coupon_req').click(function(){
+        var coupon_req = {merchant_id:"RCTST0000008099"};
+        var coupon_req    = JSON.stringify(coupon_req);
+        socket.emit('COUPONS_REQUEST',coupon_req);
+      });
+      $('#update_req').click(function(){
+        var update_req = {merchant_id:"RCTST0000008099"};
+        var update_req    = JSON.stringify(update_req);
+        socket.emit('UPDATE_ORDER_REQUEST',update_req);
+      });
+      $('#applied_coupon_req').click(function(){
+        var applied_coupon_req = {merchant_id:"RCTST0000008099"};
+        var applied_coupon_req    = JSON.stringify(applied_coupon_req);
+        socket.emit('APPLIED_COUPON_REQUEST',applied_coupon_req);
+      });
+      $('#unselect_coupon_req').click(function(){
+        var unselect_coupon_req = {merchant_id:"RCTST0000008099"};
+        var unselect_coupon_req    = JSON.stringify(unselect_coupon_req);
+        socket.emit('UNSELECT_COUPON_REQUEST',unselect_coupon_req);
+      });
+      $('#select_coupon_req').click(function(){
+        var unselect_coupon_req = {merchant_id:"RCTST0000008099"};
+        var unselect_coupon_req    = JSON.stringify(unselect_coupon_req);
+        socket.emit('SELECT_COUPON_REQUEST',unselect_coupon_req);
+      });
+      $('#resetcust_app_req').click(function(){
+        var unselect_coupon_req = {merchant_id:"RCTST0000008099"};
+        var unselect_coupon_req    = JSON.stringify(unselect_coupon_req);
+        socket.emit('RESET_CUSTOMER_APP_REQUEST',unselect_coupon_req);
+      });
+      $('#payment_req').click(function(){
+        var unselect_coupon_req = {merchant_id:"RCTST0000008099"};
+        var unselect_coupon_req    = JSON.stringify(unselect_coupon_req);
+        socket.emit('PAYMENT_BEING_PROCESSED_REQUEST',unselect_coupon_req);
+      });
+      $('#displayerr_req').click(function(){
+        var unselect_coupon_req = {merchant_id:"RCTST0000008099"};
+        var unselect_coupon_req    = JSON.stringify(unselect_coupon_req);
+        socket.emit('DISPLAY_ERROR_MESSAGE_REQUEST',unselect_coupon_req);
+      });
+      $('#send_mer_id_req').click(function(){
+        var unselect_coupon_req = {merchant_id:"RCTST0000008099"};
+        var unselect_coupon_req    = JSON.stringify(unselect_coupon_req);
+        socket.emit('SEND_MERCHANT_ID_REQUEST',unselect_coupon_req);
+      });
+
+      $('#discount_coupon_req').click(function(){
+        var unselect_coupon_req = {merchant_id:"RCTST0000008099"};
+        var unselect_coupon_req    = JSON.stringify(unselect_coupon_req);
+        socket.emit('DISCOUNT_COUPON_DETAILS_REQUEST',unselect_coupon_req);
+      });
+      $('#signupoffer_req').click(function(){
+        var signupoffer_req = {merchant_id:"RCTST0000008099"};
+        var signupoffer_req    = JSON.stringify(signupoffer_req);
+        socket.emit('SIGN_UP_OFFER_REQUEST',signupoffer_req);
+      });
+      $('#textactivated_req').click(function(){
+        var textactivated_req = {merchant_id:"RCTST0000008099"};
+        var textactivated_req    = JSON.stringify(textactivated_req);
+        socket.emit('TEXT_NOT_ACTIVATED_REQUEST',textactivated_req);
+      });
+      $('#update_merchant_req').click(function(){
+        var textactivated_req = {merchant_id:"RCTST0000008099"};
+        var textactivated_req    = JSON.stringify(textactivated_req);
+        socket.emit('UPDATE_MERCHANT_INFO_REQUEST',textactivated_req);
+      });
+      $('#remove_order_req').click(function(){
+        var remove_order_req = {merchant_id:"RCTST0000008099"};
+        var remove_order_req    = JSON.stringify(remove_order_req);
+        socket.emit('REMOVE_ORDER_REQUEST',remove_order_req);
+      });
+      $('#remove_coupon_req').click(function(){
+        var remove_coupon_req = {merchant_id:"RCTST0000008099"};
+        var remove_coupon_req    = JSON.stringify(remove_coupon_req);
+        socket.emit('REMOVE_COUPON_REQUEST',remove_coupon_req);
+      });
+      $('#guid_rcv_req').click(function(){
+        var guid_rcv_req = {pin:"6356",guid:"125cf074-7347-4431-a215-4408ae78bd47"};
+        var guid_rcv_req    = JSON.stringify(guid_rcv_req);
+        socket.emit('GUID_RECEIVED',guid_rcv_req);
+      });
+
+       $('#unpair_device_req').click(function(){
+        var unpair_device_req = {guid:"1234567890"};
+        var unpair_device_req    = JSON.stringify(unpair_device_req);
+        socket.emit('UNPAIR_DEVICES_REQUEST',unpair_device_req);
+      });
+      $('#expired_pin_chk').click(function(){
+        var unpair_device_req = {guid:"977b2f40SDFf2DFGFD118ddf"};
+        var unpair_device_req    = JSON.stringify(unpair_device_req);
+        socket.emit('PIN_EXPIREDCHECK_REQUEST',unpair_device_req);
+      });
+      $('#optin_via_api').click(function(){
+        var optin_via_api = {guid:"977b2f40SDFf2DFGFD118ddf"};
+        var optin_via_api    = JSON.stringify(optin_via_api);
+        socket.emit('OPT_IN_VIA_API_REQUEST',optin_via_api);
+      });
+      $('#optout_via_api').click(function(){
+        var optout_via_api = {guid:"977b2f40SDFf2DFGFD118ddf"};
+        var optout_via_api    = JSON.stringify(optout_via_api);
+        socket.emit('OPT_OUT_VIA_API_REQUEST',optout_via_api);
+      });
+  });
+  
+  </script>
+</head>
+
+<body>
+  <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
+    <b>ROOMS</b>
+    <div id="rooms"></div>
+  </div>
+
+  <div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+    <div id="conversation"></div>
+    <input id="data" style="width:200px;" />
+    <input type="button" id="datasend" value="send" />
+  </div>
+  <input type="button" id="optin_button" value="request_optin" />
+  <input type="button" id="optin_button_userid" value="OPT_IN_REQUEST" />
+  <input type="button" id="opt_out_button" value="OPT_OUT_REQUEST" />
+  <input type="button" id="on_kill_request" value="on_kill_request" />
+  <input type="button" id="cancele_button" value="Cancele Tos Button" />
+  <input type="button" id="cancele_button_new" value="Cancele Button" />
+  <input type="button" id="order_modifi_req" value="ORDER_MODIFIED_REQUEST" />
+  <input type="button" id="version_req" value="MERCHANT_LOCAL_VERSION_REQUEST" />
+  <input type="button" id="cus_version_req" value="CUSTOMER_LOCAL_VERSION_REQUEST" />
+  <input type="button" id="coupon_req" value="COUPONS_REQUEST" />
+  <input type="button" id="update_req" value="UPDATE_ORDER_REQUEST" />
+  <input type="button" id="applied_coupon_req" value="APPLIED_COUPON_REQUEST" />
+  <input type="button" id="unselect_coupon_req" value="UNSELECT_COUPON_REQUEST" />
+  <input type="button" id="select_coupon_req" value="SELECT_COUPON_REQUEST" />
+  <input type="button" id="resetcust_app_req" value="RESET_CUSTOMER_APP_REQUEST" />
+  <input type="button" id="payment_req" value="PAYMENT_BEING_PROCESSED_REQUEST" />
+  <input type="button" id="displayerr_req" value="DISPLAY_ERROR_MESSGAE_REQUEST" />
+  <input type="button" id="send_mer_id_req" value="SEND_MERCHANT_ID_REQUEST" />
+  <input type="button" id="discount_coupon_req" value="DISCOUNT_COUPON_DETAILS_REQUEST" />
+  <input type="button" id="signupoffer_req" value="SIGN_UP_OFFER_REQUEST" />
+  <input type="button" id="textactivated_req" value="TEXT_NOT_ACTIVATED_REQUEST" />
+  <input type="button" id="update_merchant_req" value="UPDATE_MERCHANT_INFO_REQUEST" />
+  <input type="button" id="remove_order_req" value="REMOVE_ORDER_REQUEST" />
+  <input type="button" id="remove_coupon_req" value="REMOVE_COUPON_REQUEST" />
+  <input type="button" id="guid_rcv_req" value="GUID_RECEIVED" />
+  <input type="button" id="unpair_device_req" value="UNPAIR_DEVICES_REQUEST" />
+  <input type="button" id="expired_pin_chk" value="PIN_EXPIREDCHECK_REQUEST" />
+
+  <input type="button" id="optin_via_api" value="OPT_IN_VIA_ API_REQUEST" />
+  <input type="button" id="optout_via_api" value="OPT_OUT_VIA_ API_REQUEST " />
+</body>
